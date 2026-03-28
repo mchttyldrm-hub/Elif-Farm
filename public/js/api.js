@@ -97,6 +97,18 @@ const API = {
     setOpeningBalance: (body) => API.post('/yem/opening-balance', body),
   },
 
+  // EF-Gübre
+  gubre: {
+    listEntries:          (p)           => API.get('/gubre/entries?' + new URLSearchParams(p).toString()),
+    createEntry:          (body)        => API.post('/gubre/entries', body),
+    deleteEntry:          (id, reason)  => API.post(`/gubre/entries/${id}/delete`, { reason }),
+
+    monthlyClosingStatus: (date) => API.get(`/gubre/closing/monthly${date ? '?date=' + date : ''}`),
+    closeMonth:           (date) => API.post(`/gubre/closing/monthly${date ? '?date=' + date : ''}`),
+
+    monthlyReport: (y, m) => API.get(`/gubre/reports/monthly?year=${y}&month=${m}`),
+  },
+
   // Push
   push: {
     subscribe:   (sub)      => API.post('/push/subscribe', sub),

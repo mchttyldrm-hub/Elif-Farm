@@ -177,9 +177,10 @@ async function route(request: Request, env: Env, path: string, method: string): 
     return handleYem(request, env, path.slice('/api/yem'.length), method);
   }
 
-  // ── EF-Gübre rotaları (Aşama 5'te eklenecek) ──
+  // ── EF-Gübre ──
   if (path.startsWith('/api/gubre/')) {
-    return err('EF-Gübre modülü Aşama 5\'te eklenecek', 501);
+    const { handleGubre } = await import('./routes/gubre/index');
+    return handleGubre(request, env, path.slice('/api/gubre'.length), method);
   }
 
   // Frontend — statik dosyalar ve SPA shell

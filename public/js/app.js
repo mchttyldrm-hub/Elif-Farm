@@ -132,7 +132,12 @@ function loadModule(mod) {
       YemManager.render(content);
     }
   } else if (mod === 'ef_gubre') {
-    content.innerHTML = '<div class="empty">EF-Gübre modülü yakında</div>';
+    const isEmployee = currentUser.role === 'employee';
+    if (isEmployee) {
+      GubreEmployee.render(content);
+    } else {
+      GubreManager.render(content);
+    }
   }
 }
 
