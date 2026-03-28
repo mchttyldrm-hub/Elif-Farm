@@ -62,6 +62,41 @@ const API = {
     monthlyReport:  (y, m) => API.get(`/stok/reports/monthly?year=${y}&month=${m}`),
   },
 
+  // EF-Yem
+  yem: {
+    dashboard:      (date) => API.get(`/yem/dashboard${date ? '?date=' + date : ''}`),
+
+    listMaterials:  ()     => API.get('/yem/materials'),
+    createMaterial: (body) => API.post('/yem/materials', body),
+    updateMaterial: (id, body) => API.put(`/yem/materials/${id}`, body),
+
+    listPurchases:  (p)    => API.get('/yem/purchases?' + new URLSearchParams(p).toString()),
+    createPurchase: (body) => API.post('/yem/purchases', body),
+    updatePurchasePrice: (id, price) => API.put(`/yem/purchases/${id}/price`, { unit_price_iqd: price }),
+    cancelPurchase: (id, reason)    => API.post(`/yem/purchases/${id}/cancel`, { reason }),
+
+    listRecipes:    (coopId) => API.get(`/yem/recipes${coopId ? '?coop_id=' + coopId : ''}`),
+    getRecipe:      (id)     => API.get(`/yem/recipes/${id}`),
+    createRecipe:   (body)   => API.post('/yem/recipes', body),
+    activateRecipe: (id)     => API.post(`/yem/recipes/${id}/activate`),
+
+    listProductions:   (p)   => API.get('/yem/productions?' + new URLSearchParams(p).toString()),
+    createProduction:  (body) => API.post('/yem/productions', body),
+    reverseProduction: (id, reason) => API.post(`/yem/productions/${id}/reverse`, { reason }),
+
+    listSiloClosings:   (coopId) => API.get(`/yem/silo${coopId ? '?coop_id=' + coopId : ''}`),
+    upsertSiloClosing:  (body)   => API.post('/yem/silo', body),
+    getSiloConsumption: (coopId, date) => API.get(`/yem/silo/consumption?coop_id=${coopId}&date=${date}`),
+
+    monthlyClosingStatus: (date) => API.get(`/yem/closing/monthly${date ? '?date=' + date : ''}`),
+    closeMonth:           (date) => API.post(`/yem/closing/monthly${date ? '?date=' + date : ''}`),
+
+    monthlyReport:  (y, m) => API.get(`/yem/reports/monthly?year=${y}&month=${m}`),
+
+    getOpeningBalance: ()     => API.get('/yem/opening-balance'),
+    setOpeningBalance: (body) => API.post('/yem/opening-balance', body),
+  },
+
   // Push
   push: {
     subscribe:   (sub)      => API.post('/push/subscribe', sub),

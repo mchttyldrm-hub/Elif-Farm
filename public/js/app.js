@@ -125,7 +125,12 @@ function loadModule(mod) {
       StokManager.render(content);
     }
   } else if (mod === 'ef_yem') {
-    content.innerHTML = '<div class="empty">EF-Yem modülü yakında</div>';
+    const isEmployee = currentUser.role === 'employee';
+    if (isEmployee) {
+      YemEmployee.render(content);
+    } else {
+      YemManager.render(content);
+    }
   } else if (mod === 'ef_gubre') {
     content.innerHTML = '<div class="empty">EF-Gübre modülü yakında</div>';
   }

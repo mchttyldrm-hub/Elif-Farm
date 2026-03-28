@@ -207,8 +207,9 @@ CREATE TABLE IF NOT EXISTS raw_material_purchases (
   unit_price_iqd   REAL,     -- NULL = eksik_fiyatlı
   total_price_iqd  REAL,     -- hesaplanan; NULL ise eksik
   status           TEXT    NOT NULL DEFAULT 'complete'
-                   CHECK(status IN ('complete','missing_price')),
+                   CHECK(status IN ('complete','missing_price','cancelled')),
   force_incomplete INTEGER NOT NULL DEFAULT 0,  -- manager explicit override
+  is_cancelled     INTEGER NOT NULL DEFAULT 0,
   note             TEXT,
   created_by       INTEGER NOT NULL REFERENCES users(id),
   price_entered_by INTEGER REFERENCES users(id),

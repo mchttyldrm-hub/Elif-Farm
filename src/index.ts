@@ -171,9 +171,10 @@ async function route(request: Request, env: Env, path: string, method: string): 
     return handleStok(request, env, path.slice('/api/stok'.length), method);
   }
 
-  // ── EF-Yem rotaları (Aşama 4'te eklenecek) ──
+  // ── EF-Yem ──
   if (path.startsWith('/api/yem/')) {
-    return err('EF-Yem modülü Aşama 4\'te eklenecek', 501);
+    const { handleYem } = await import('./routes/yem/index');
+    return handleYem(request, env, path.slice('/api/yem'.length), method);
   }
 
   // ── EF-Gübre rotaları (Aşama 5'te eklenecek) ──
