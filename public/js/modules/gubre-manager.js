@@ -136,6 +136,8 @@ const GubreManager = {
                    value="${y}-${String(m).padStart(2,'0')}"
                    onchange="GubreManager._reloadReport()"
                    style="font-size:.85rem;padding:4px 8px">
+            <button class="btn btn-sm" onclick="GubreManager._exportCsv()"
+                    style="font-size:.8rem;padding:4px 10px">CSV İndir</button>
           </div>
         </div>
         <div id="gubre-report-body"><div class="loading">Yükleniyor…</div></div>
@@ -199,6 +201,31 @@ const GubreManager = {
     }
 
     el.innerHTML = html;
+  },
+
+  // ── CSV Export ──
+  async _exportCsv() {
+    const monthVal = document.getElementById('gubre-report-month')?.value ?? this.currentDate.slice(0, 7);
+    const [y, m] = monthVal.split('-').map(Number);
+
+    const res = await API.gubre.monthlyReport(y, m);
+    if (!res.ok) { showToast('Veri alınamadı', 'danger'); return; }
+    const d = res.data;
+
+    // Kümes bazlı tablo
+    const rows = [
+      [`Elif Farm — EF-Gübre Aylık Raporu (${y}/${String(m).padStart(2,'0')})`],
+      [],
+      ['Kümes', 'Giriş Sayısı', 'Toplam Araç'],
+      ...(d.by_coop ?? []).map(r => [r.coop_name, r.entry_count, r.total_vehicles]),
+      [],
+      ['TOPLAM', d.total_entries, d.total_vehicles],
+      [],
+      ['Gün', 'Araç'],
+      ...(d.by_day ?? []).map(r => [fmtDate(r.entry_date), r.total_vehicles]),
+    ];
+
+    downloadCsv(`gubre-raporu-${y}-${String(m).padStart(2,'0')}.csv`, rows);
   },
 
   // ── Kapanış ──

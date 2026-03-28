@@ -165,6 +165,31 @@ async function route(request: Request, env: Env, path: string, method: string): 
     return ok({ message: 'Okundu' });
   }
 
+  // ── Bildirim tercihleri ──
+  if (path === '/api/notification-prefs' && method === 'GET') {
+    const auth = await requireAuth(request, env);
+    if (auth instanceof Response) return auth;
+    const rows = await env.DB
+      .prepare('SELECT notification_type, channel FROM notification_preferences WHERE user_id = ?')
+      .bind(auth.user.id).all();
+    return ok(rows.results);
+  }
+
+  if (path === '/api/notification-prefs' && method === 'PUT') {
+    const auth = await requireAuth(request, env);
+    if (auth instanceof Response) return auth;
+    const body = await request.json() as { notification_type: string; channel: string };
+    if (!body.notification_type || !body.channel) return err('notification_type ve channel zorunludur', 422);
+    const validChannels = ['push', 'in_app', 'disabled'];
+    if (!validChannels.includes(body.channel)) return err('Geçersiz channel', 422);
+    await env.DB.prepare(`
+      INSERT INTO notification_preferences (user_id, notification_type, channel)
+      VALUES (?, ?, ?)
+      ON CONFLICT(user_id, notification_type) DO UPDATE SET channel = excluded.channel
+    `).bind(auth.user.id, body.notification_type, body.channel).run();
+    return ok({ message: 'Tercih güncellendi' });
+  }
+
   // ── EF-Stok ──
   if (path.startsWith('/api/stok/')) {
     const { handleStok } = await import('./routes/stok/index');

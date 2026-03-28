@@ -116,8 +116,10 @@ const API = {
   },
 
   // Notifications
-  notifications:  ()   => API.get('/notifications'),
-  markRead:       (id) => API.put(`/notifications/${id}`),
+  notifications:      ()              => API.get('/notifications'),
+  markRead:           (id)            => API.put(`/notifications/${id}`),
+  getNotifPrefs:      ()              => API.get('/notification-prefs'),
+  setNotifPref:       (type, channel) => API.put('/notification-prefs', { notification_type: type, channel }),
 };
 
 // ── Yardımcılar ──
@@ -170,4 +172,30 @@ function showToast(msg, type = 'success') {
 
 function today() {
   return new Date().toISOString().slice(0, 10);
+}
+
+// ── CSV export yardımcısı ──
+
+function downloadCsv(filename, rows) {
+  // rows: array of arrays — first row = header
+  const content = rows.map(row =>
+    row.map(cell => {
+      const s = String(cell ?? '');
+      // RFC 4180: quote cells containing comma, quote, or newline
+      return (s.includes(',') || s.includes('"') || s.includes('\n'))
+        ? '"' + s.replace(/"/g, '""') + '"'
+        : s;
+    }).join(',')
+  ).join('\r\n');
+
+  const blob = new Blob(['\uFEFF' + content], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }

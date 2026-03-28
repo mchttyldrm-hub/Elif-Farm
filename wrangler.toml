@@ -13,6 +13,8 @@ JWT_SECRET = "change-this-in-production"
 VAPID_PUBLIC_KEY = "change-this-after-vapid-generate"
 VAPID_PRIVATE_KEY = "change-this-after-vapid-generate"
 VAPID_SUBJECT = "mailto:admin@elifarm.com"
+# VAPID anahtarları: scripts/generate-vapid.js ile oluşturun
+# node scripts/generate-vapid.js
 
 [site]
 bucket = "./public"

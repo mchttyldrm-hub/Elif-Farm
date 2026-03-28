@@ -141,28 +141,11 @@ function loadModule(mod) {
   }
 }
 
-async function loadNotifications() {
+function loadNotifications() {
   document.querySelectorAll('#bottom-nav a').forEach(a => a.classList.remove('active'));
   const content = document.getElementById('module-content');
   content.innerHTML = '<div class="loading">Yükleniyor…</div>';
-
-  const res = await API.notifications();
-  if (!res.ok) { content.innerHTML = '<div class="empty">Yüklenemedi</div>'; return; }
-
-  const items = res.data;
-  if (!items.length) { content.innerHTML = '<div class="empty">Bildirim yok</div>'; return; }
-
-  let html = '<div class="card"><div class="card-header"><h2>Bildirimler</h2></div><div class="card-body" style="padding:0">';
-  items.forEach(n => {
-    html += `<div style="padding:12px 16px;border-bottom:1px solid var(--c-border);${n.is_read ? 'opacity:.6' : ''}">
-      <div style="font-weight:600;font-size:.9rem">${escHtml(n.title)}</div>
-      <div style="font-size:.85rem;color:var(--c-text-s);margin-top:2px">${escHtml(n.body)}</div>
-      <div style="font-size:.75rem;color:var(--c-disabled);margin-top:4px">${fmtDate(n.created_at)}</div>
-    </div>`;
-    if (!n.is_read) API.markRead(n.id).catch(() => {});
-  });
-  html += '</div></div>';
-  content.innerHTML = html;
+  NotifPage.render(content, currentUser);
 }
 
 // ── Push Permission ──

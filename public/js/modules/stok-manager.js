@@ -379,18 +379,55 @@ const StokManager = {
     `;
   },
 
+  _exportWeeklyCsv(r) {
+    const rows = [
+      [`Elif Farm — EF-Stok Haftalık Rapor (${fmtDate(r.week_start)} – ${fmtDate(r.week_end)})`],
+      [],
+      ['Kategori', 'Kg', 'Toplam Kutu', 'Kesin Gelir (IQD)', 'Bekleyen Kutu'],
+      ...r.sales_by_category.map(s => [
+        catLabel(s.category),
+        s.total_kg > 0 ? parseFloat(s.total_kg).toFixed(1) : 0,
+        s.toplam_sevk_box ?? 0,
+        s.kesin_gelir ?? 0,
+        s.bekleyen_box ?? 0,
+      ]),
+    ];
+    downloadCsv(`stok-haftalik-${r.week_start}.csv`, rows);
+  },
+
+  _exportMonthlyCsv(r) {
+    const rows = [
+      [`Elif Farm — EF-Stok Aylık Rapor (${r.year}/${String(r.month).padStart(2,'0')})`],
+      [],
+      ['Kategori', 'Kg', 'Toplam Kutu', 'Ort. Fiyat (IQD)', 'Kesin Gelir (IQD)'],
+      ...r.sales_by_category.map(s => [
+        catLabel(s.category),
+        s.total_kg > 0 ? parseFloat(s.total_kg).toFixed(1) : 0,
+        s.toplam_sevk_box ?? 0,
+        s.avg_price ?? 0,
+        s.kesin_gelir ?? 0,
+      ]),
+    ];
+    downloadCsv(`stok-aylik-${r.year}-${String(r.month).padStart(2,'0')}.csv`, rows);
+  },
+
   async loadWeeklyReport() {
     const el = document.getElementById('report-content');
     el.innerHTML = '<div class="loading">Yükleniyor…</div>';
     const res = await API.stok.weeklyReport(today());
     if (!res.ok) { el.innerHTML = '<div class="empty">Yüklenemedi</div>'; return; }
     const r = res.data;
+    this._lastWeeklyReport = r;
 
     el.innerHTML = `
       <div class="card" style="margin-top:8px">
         <div class="card-header">
           <h2>Haftalık Rapor</h2>
-          <span style="font-size:.8rem;color:var(--c-text-s)">${fmtDate(r.week_start)} – ${fmtDate(r.week_end)}</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:.8rem;color:var(--c-text-s)">${fmtDate(r.week_start)} – ${fmtDate(r.week_end)}</span>
+            <button class="btn btn-sm" onclick="StokManager._exportWeeklyCsv(StokManager._lastWeeklyReport)"
+                    style="font-size:.75rem;padding:2px 8px">CSV</button>
+          </div>
         </div>
         <div class="table-wrap"><table>
           <thead><tr><th>Kategori</th><th>Kg</th><th>Toplam Kutu</th><th>Kesin Gelir</th><th>Bekleyen</th></tr></thead>
@@ -415,9 +452,14 @@ const StokManager = {
     const res = await API.stok.monthlyReport(now.getFullYear(), now.getMonth() + 1);
     if (!res.ok) { el.innerHTML = '<div class="empty">Yüklenemedi</div>'; return; }
     const r = res.data;
+    this._lastMonthlyReport = r;
 
     let html = `<div class="card" style="margin-top:8px">
-      <div class="card-header"><h2>${r.year}/${String(r.month).padStart(2,'0')} Aylık Rapor</h2></div>
+      <div class="card-header">
+        <h2>${r.year}/${String(r.month).padStart(2,'0')} Aylık Rapor</h2>
+        <button class="btn btn-sm" onclick="StokManager._exportMonthlyCsv(StokManager._lastMonthlyReport)"
+                style="font-size:.75rem;padding:2px 8px">CSV</button>
+      </div>
       <div class="table-wrap"><table>
         <thead><tr><th>Kategori</th><th>Kg</th><th>Kutu</th><th>Ort. Fiyat</th><th>Kesin Gelir</th></tr></thead>
         <tbody>
