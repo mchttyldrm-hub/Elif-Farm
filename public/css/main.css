@@ -1,0 +1,366 @@
+/* ============================================================
+   Elif Farm — Ana CSS (Mobile-first)
+   ============================================================ */
+
+:root {
+  --c-primary:   #1b5e20;
+  --c-primary-m: #2e7d32;
+  --c-primary-l: #e8f5e9;
+  --c-accent:    #43a047;
+  --c-danger:    #c62828;
+  --c-danger-l:  #ffebee;
+  --c-warn:      #e65100;
+  --c-warn-l:    #fff3e0;
+  --c-info:      #1565c0;
+  --c-info-l:    #e3f2fd;
+  --c-success:   #2e7d32;
+  --c-bg:        #f5f5f5;
+  --c-card:      #ffffff;
+  --c-text:      #212121;
+  --c-text-s:    #616161;
+  --c-border:    #e0e0e0;
+  --c-disabled:  #9e9e9e;
+
+  /* Kategori renkleri */
+  --c-normal: #1565c0;
+  --c-kirli:  #e65100;
+  --c-kirik:  #6a1b9a;
+  --c-kucuk:  #00695c;
+
+  --radius:  8px;
+  --shadow:  0 1px 3px rgba(0,0,0,.12);
+  --nav-h:   56px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--c-bg);
+  color: var(--c-text);
+  min-height: 100dvh;
+  padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom));
+}
+
+/* ── Layout ── */
+#app { max-width: 640px; margin: 0 auto; }
+
+.header {
+  background: var(--c-primary);
+  color: #fff;
+  padding: 12px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+}
+.header h1 { font-size: 1.1rem; font-weight: 600; flex: 1; }
+.header .badge {
+  background: rgba(255,255,255,.2);
+  font-size: .75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+/* ── Bottom Navigation ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  height: calc(var(--nav-h) + env(safe-area-inset-bottom));
+  background: var(--c-card);
+  border-top: 1px solid var(--c-border);
+  display: flex;
+  z-index: 200;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.bottom-nav a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  text-decoration: none;
+  color: var(--c-text-s);
+  font-size: .65rem;
+  padding-bottom: env(safe-area-inset-bottom);
+  transition: color .15s;
+}
+.bottom-nav a.active { color: var(--c-primary-m); }
+.bottom-nav a svg { width: 22px; height: 22px; }
+
+/* ── Cards ── */
+.card {
+  background: var(--c-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin: 12px 12px 0;
+  overflow: hidden;
+}
+.card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--c-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-header h2 { font-size: 1rem; font-weight: 600; }
+.card-body { padding: 16px; }
+
+/* ── Forms ── */
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  font-size: .85rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--c-text-s);
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-family: inherit;
+  background: #fff;
+  color: var(--c-text);
+  transition: border-color .15s;
+  -webkit-appearance: none;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--c-primary-m);
+}
+.form-group input[type=number] { font-size: 1.1rem; font-weight: 600; }
+.form-hint { font-size: .75rem; color: var(--c-text-s); margin-top: 4px; }
+
+/* Büyük sayı input (hızlı giriş için) */
+.input-large input {
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 16px;
+}
+
+/* ── Kategori seçici (tile'lar) ── */
+.category-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.cat-tile {
+  border: 2px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  background: #fff;
+  transition: all .15s;
+  font-weight: 600;
+  font-size: .95rem;
+}
+.cat-tile:active { transform: scale(.97); }
+.cat-tile.selected-normal { border-color: var(--c-normal); background: #e3f2fd; color: var(--c-normal); }
+.cat-tile.selected-kirli  { border-color: var(--c-kirli);  background: #fff3e0; color: var(--c-kirli); }
+.cat-tile.selected-kirik  { border-color: var(--c-kirik);  background: #f3e5f5; color: var(--c-kirik); }
+.cat-tile.selected-kucuk  { border-color: var(--c-kucuk);  background: #e0f2f1; color: var(--c-kucuk); }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  transition: opacity .15s, transform .1s;
+  min-height: 48px;
+}
+.btn:active { transform: scale(.98); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-primary  { background: var(--c-primary-m); color: #fff; width: 100%; }
+.btn-danger   { background: var(--c-danger);    color: #fff; }
+.btn-ghost    { background: transparent; color: var(--c-primary-m); border: 1.5px solid var(--c-primary-m); }
+.btn-sm       { padding: 8px 14px; font-size: .85rem; min-height: 36px; }
+
+/* ── Tables ── */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+th {
+  text-align: left;
+  padding: 8px 10px;
+  background: var(--c-bg);
+  font-weight: 600;
+  color: var(--c-text-s);
+  border-bottom: 2px solid var(--c-border);
+  white-space: nowrap;
+}
+td {
+  padding: 10px 10px;
+  border-bottom: 1px solid var(--c-border);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+
+/* ── Status badges ── */
+.badge-status {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: .75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-pending           { background: var(--c-warn-l);   color: var(--c-warn); }
+.badge-partially_priced  { background: var(--c-info-l);   color: var(--c-info); }
+.badge-closed            { background: var(--c-primary-l);color: var(--c-primary); }
+.badge-cancelled         { background: #f5f5f5;            color: var(--c-disabled); }
+
+/* Kategori renk etiketleri */
+.cat-normal { color: var(--c-normal); font-weight: 600; }
+.cat-kirli  { color: var(--c-kirli);  font-weight: 600; }
+.cat-kirik  { color: var(--c-kirik);  font-weight: 600; }
+.cat-kucuk  { color: var(--c-kucuk);  font-weight: 600; }
+
+/* ── Alert ── */
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: .9rem;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.alert-warn    { background: var(--c-warn-l);   color: var(--c-warn); border: 1px solid #ffcc80; }
+.alert-danger  { background: var(--c-danger-l); color: var(--c-danger); border: 1px solid #ef9a9a; }
+.alert-success { background: var(--c-primary-l);color: var(--c-primary); border: 1px solid #a5d6a7; }
+.alert-info    { background: var(--c-info-l);   color: var(--c-info); border: 1px solid #90caf9; }
+
+/* ── Revenue summary (Kural 4) ── */
+.revenue-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.rev-cell {
+  background: var(--c-bg);
+  border-radius: var(--radius);
+  padding: 10px;
+  text-align: center;
+}
+.rev-cell .label { font-size: .7rem; color: var(--c-text-s); margin-bottom: 4px; }
+.rev-cell .value { font-size: 1rem; font-weight: 700; }
+.rev-kesin   .value { color: var(--c-success); }
+.rev-beklenen .value { color: var(--c-warn); }
+.rev-toplam  .value { color: var(--c-info); }
+
+/* ── Sections / Pages ── */
+.page { display: none; padding-bottom: 16px; }
+.page.active { display: block; }
+
+/* ── Loading ── */
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 32px;
+  color: var(--c-text-s);
+}
+
+/* ── Empty state ── */
+.empty {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--c-text-s);
+  font-size: .9rem;
+}
+
+/* ── Login screen ── */
+#login-screen {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--c-primary);
+}
+.login-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 360px;
+}
+.login-box h1 {
+  font-size: 1.4rem;
+  color: var(--c-primary);
+  margin-bottom: 8px;
+  text-align: center;
+}
+.login-logo {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+.login-subtitle {
+  text-align: center;
+  font-size: .85rem;
+  color: var(--c-text-s);
+  margin-bottom: 24px;
+}
+
+/* ── iOS Home Screen banner ── */
+.ios-banner {
+  background: var(--c-primary);
+  color: #fff;
+  padding: 12px 16px;
+  font-size: .85rem;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: sticky;
+  top: 48px;
+  z-index: 90;
+}
+.ios-banner button {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,.7);
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 0 4px;
+}
+
+/* ── Blocker list ── */
+.blocker-list { list-style: none; }
+.blocker-list li {
+  padding: 8px 12px;
+  border-left: 3px solid var(--c-danger);
+  background: var(--c-danger-l);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-bottom: 8px;
+  font-size: .9rem;
+}
+
+/* ── Responsive ── */
+@media (min-width: 640px) {
+  #app { padding: 0 16px; }
+  .card { margin-left: 0; margin-right: 0; }
+}

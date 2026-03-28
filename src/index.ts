@@ -2,11 +2,13 @@
 // Cloudflare Worker — Ana giriş noktası ve router
 // ============================================================
 
-import { Env, err } from './types';
+import { Env, err, ok } from './types';
 import { handleLogin, handleLogout, handleMe, handleHashPassword } from './routes/auth';
 import { rebuildStockSummary, rebuildRawMaterialSummary } from './lib/ledger';
 import { requireAuth } from './middleware/auth';
-import { ok } from './types';
+
+// Cloudflare Workers Static Assets binding (wrangler.toml'da tanımlanır)
+declare const __STATIC_CONTENT: KVNamespace | undefined;
 
 // CORS headers — geliştirme ortamı için
 const CORS = {
@@ -163,9 +165,10 @@ async function route(request: Request, env: Env, path: string, method: string): 
     return ok({ message: 'Okundu' });
   }
 
-  // ── EF-Stok rotaları (Aşama 3'te eklenecek) ──
+  // ── EF-Stok ──
   if (path.startsWith('/api/stok/')) {
-    return err('EF-Stok modülü Aşama 3\'te eklenecek', 501);
+    const { handleStok } = await import('./routes/stok/index');
+    return handleStok(request, env, path.slice('/api/stok'.length), method);
   }
 
   // ── EF-Yem rotaları (Aşama 4'te eklenecek) ──
@@ -178,14 +181,26 @@ async function route(request: Request, env: Env, path: string, method: string): 
     return err('EF-Gübre modülü Aşama 5\'te eklenecek', 501);
   }
 
-  // Frontend — tüm diğer GET istekleri shell HTML'e yönlendirilir (SPA)
+  // Frontend — statik dosyalar ve SPA shell
   if (method === 'GET' && !path.startsWith('/api/')) {
-    return new Response('<!-- Shell eklenecek (Aşama 3) -->', {
-      headers: { 'Content-Type': 'text/html' },
-    });
+    return serveStatic(path, env);
   }
 
   return err('Bulunamadı', 404);
+}
+
+// ──────────────────────────────────────────────────────────
+// Statik dosya servisi
+// ──────────────────────────────────────────────────────────
+async function serveStatic(path: string, _env: Env): Promise<Response> {
+  // SPA: tüm path'ler index.html'e düşer (JS router devralır)
+  // Gerçek statik dosyalar Cloudflare Workers Sites veya Pages ile serve edilir.
+  // Bu fallback geliştirme/test için:
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Elif Farm</title>
+<script>window.location.replace('/');</script>
+</head><body></body></html>`;
+  return new Response(html, { headers: { 'Content-Type': 'text/html' } });
 }
 
 // ──────────────────────────────────────────────────────────

@@ -14,9 +14,8 @@ VAPID_PUBLIC_KEY = "change-this-after-vapid-generate"
 VAPID_PRIVATE_KEY = "change-this-after-vapid-generate"
 VAPID_SUBJECT = "mailto:admin@elifarm.com"
 
-[[migrations]]
-tag = "v1"
-new_classes = []
+[site]
+bucket = "./public"
 
 [triggers]
 crons = ["0 20 * * *"]

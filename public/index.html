@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1b5e20">
+  <meta name="vapid-key" content="{{VAPID_PUBLIC_KEY}}">
+  <title>Elif Farm</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+<!-- ── Login Ekranı ── -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">🌾</div>
+    <h1>Elif Farm</h1>
+    <p class="login-subtitle">Çiftlik Operasyon Yönetimi</p>
+    <form onsubmit="doLogin(event)">
+      <div class="form-group">
+        <label>Kullanıcı Adı</label>
+        <input id="username" type="text" autocomplete="username"
+               autocapitalize="none" required placeholder="kullanıcı adı">
+      </div>
+      <div class="form-group">
+        <label>Şifre</label>
+        <input id="password" type="password" autocomplete="current-password"
+               required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary">Giriş Yap</button>
+    </form>
+  </div>
+</div>
+
+<!-- ── Ana Uygulama ── -->
+<div id="app-screen" style="display:none">
+
+  <!-- iOS Home Screen yönlendirme banner'ı (app.js yönetir) -->
+  <div id="ios-banner" class="ios-banner" style="display:none">
+    <span>📱</span>
+    <span>Daha iyi deneyim için <strong>Ana Ekrana Ekle</strong>'yi kullanın
+      (Paylaş → Ana Ekrana Ekle)</span>
+    <button onclick="closeIOSBanner()">✕</button>
+  </div>
+
+  <div id="app">
+    <!-- Modül içeriği buraya render edilir -->
+    <div id="module-content">
+      <div class="loading">Yükleniyor…</div>
+    </div>
+  </div>
+
+  <!-- Alt navigasyon -->
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+</div>
+
+<!-- Scripts -->
+<script src="/js/api.js"></script>
+<script src="/js/modules/stok-employee.js"></script>
+<script src="/js/modules/stok-manager.js"></script>
+<script src="/js/app.js"></script>
+
+</body>
+</html>
