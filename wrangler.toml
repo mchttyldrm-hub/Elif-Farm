@@ -1,0 +1,22 @@
+name = "elif-farm"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "elif-farm-db"
+database_id = "placeholder-replace-after-d1-create"
+
+[vars]
+JWT_SECRET = "change-this-in-production"
+VAPID_PUBLIC_KEY = "change-this-after-vapid-generate"
+VAPID_PRIVATE_KEY = "change-this-after-vapid-generate"
+VAPID_SUBJECT = "mailto:admin@elifarm.com"
+
+[[migrations]]
+tag = "v1"
+new_classes = []
+
+[triggers]
+crons = ["0 20 * * *"]
